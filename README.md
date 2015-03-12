@@ -1,0 +1,4 @@
+bedrock.build
+=============
+
+bedrock.build is a simple JavaScript source builder. The goal of bedrock.build is to allow the same input source to be easily runable in both browser and node environments. One major obstacle in this direction is the different module systems in use in the named environments. bedrock.build solves this problem by adding yet another module system which is `import` based much like Java's. A single "main" (starting point) source is handed to build, build automatically reads it's dependencies and then digs into the sub-dependendencies recursively. When all connections are found out the end result is passed to adapters which output a specific module flavour - e.g. a closure based one for browser consumption, `require` based one for node. More adapters can be implemented for ES6 imports and AMD.
