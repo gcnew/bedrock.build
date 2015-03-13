@@ -1,0 +1,27 @@
+{
+	"name": "bedrock-build",
+	"version": "0.0.1",
+	"license": "MIT",
+	"description": "bedrock.build is a simple JavaScript builder that compiles JS files to different module systems",
+	"keywords": [ "import", "require", "amd", "build" ],
+	"author": {
+		"name": "gcnew"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/gcnew/bedrock.build"
+	},
+	"main": "./lib/build.js",
+	"bin": {
+		"bedrock-build": "./bin/bedrock-build"
+	},
+	"files": [
+		"bin",
+		"lib"
+	],
+	"dependencies": {
+	},
+	"devDependencies": {
+	},
+	"private": true
+}
