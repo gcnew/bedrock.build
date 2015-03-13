@@ -9,7 +9,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/gcnew/bedrock.build"
+		"url": "https://github.com/gcnew/bedrock.build.git"
 	},
 	"main": "./lib/build.js",
 	"bin": {
