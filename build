@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+pushd lib > /dev/null
+
+node build.js build.js ../bld/build.js
+
+popd > /dev/null
