@@ -1,7 +1,27 @@
 #!/usr/bin/env bash
 
-pushd lib > /dev/null
+node lib/build.js lib/build.js bld/raw-candidate.js
 
-node build.js build.js ../bld/build.js
+cat bld/raw-candidate.js \
+  | sed -r "s/var \w+ = require\('\.[^']+'\)([^;]+)?;//" \
+  | sed -r "s/module\.exports = \w+;//" \
+  | sed -r "s/exports\.w+ = \w+;//" \
+  > bld/candidate.js
 
-popd > /dev/null
+node bld/candidate.js lib/build.js bld/built-with-candidate.js
+
+diff bld/raw-candidate.js bld/built-with-candidate.js
+
+if [ $? -ne 0 ]; then
+  echo "Build failed"
+  exit 1
+fi
+
+rm bld/raw-candidate.js
+rm bld/built-with-candidate.js
+
+if [ -a bld/build.js ]; then
+  mv bld/build.js bld/build.old.js
+fi
+
+mv bld/candidate.js bld/build.js
