@@ -10,7 +10,7 @@ cat bld/raw-candidate.js \
 
 node bld/candidate.js lib/build.js bld/built-with-candidate.js
 
-diff bld/raw-candidate.js bld/built-with-candidate.js
+diff bld/raw-candidate.js bld/built-with-candidate.js -I __registry
 
 if [ $? -ne 0 ]; then
   echo "Build failed"
