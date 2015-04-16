@@ -1,4 +1,6 @@
-var cm__OptionsParser_js = (function() {
+var __registry_JSp6 = {};
+
+__registry_JSp6['OptionsParser.js'] = (function() {
 var OptionsParser = (function() {
 	function parseOptions(aOptions) {
 		var unknown;
@@ -95,7 +97,7 @@ var OptionsParser = (function() {
 return OptionsParser;
 })();
 
-var cm__util__extend_js = (function() {
+__registry_JSp6['util/extend.js'] = (function() {
 function extend(aTartget /*, ..args */) {
 	for (var i = 0; i < arguments.length; ++i) {
 		var arg = arguments[i];
@@ -114,7 +116,7 @@ function extend(aTartget /*, ..args */) {
 return extend;
 })();
 
-var cm__util__concatMap_js = (function() {
+__registry_JSp6['util/concatMap.js'] = (function() {
 function concatMap(aArray, aMappper, aThis) {
 	return Array.prototype.concat.apply([], aArray.map(aMappper, aThis));
 }
@@ -125,7 +127,7 @@ function concatMap(aArray, aMappper, aThis) {
 return concatMap;
 })();
 
-var cm__util__groupBy_js = (function() {
+__registry_JSp6['util/groupBy.js'] = (function() {
 function groupBy(aArray, aFunc, aThis) {
 	return aArray.reduce(function(aAcc, aValue) {
 		var key = aFunc.call(aThis, aValue);
@@ -143,7 +145,7 @@ function groupBy(aArray, aFunc, aThis) {
 return groupBy;
 })();
 
-var cm__DependencyManager_js = (function(extend) {
+__registry_JSp6['DependencyManager.js'] = (function(extend) {
 
 
 function DependencyManager() {
@@ -204,9 +206,9 @@ extend(DependencyManager.prototype, {
 
 
 return DependencyManager;
-})(cm__util__extend_js);
+})(__registry_JSp6['util/extend.js']);
 
-var cm__util__mapKeys_js = (function() {
+__registry_JSp6['util/mapKeys.js'] = (function() {
 function mapKeys(aObject, aMapper, aThis) {
 	return Object.keys(aObject).reduce(function(aAcc, aKey) {
 		aAcc[aMapper.call(aThis, aKey)] = aObject[aKey];
@@ -220,7 +222,7 @@ function mapKeys(aObject, aMapper, aThis) {
 return mapKeys;
 })();
 
-var cm__util__escapeRx_js = (function() {
+__registry_JSp6['util/escapeRx.js'] = (function() {
 // Taken from Mozilla's RegExp guide
 function escapeRx(aString) {
 	return aString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -232,7 +234,7 @@ function escapeRx(aString) {
 return escapeRx;
 })();
 
-var cm__util__strtr_js = (function(escapeRx) {
+__registry_JSp6['util/strtr.js'] = (function(escapeRx) {
 
 
 function id(aX) {
@@ -253,7 +255,7 @@ function strtr(aString, aTranslations, aTo, aMapper) {
 		var translations = {};
 		translations[aTranslations] = aTo;
 
-		return strtr(aString, translations);
+		return strtr(aString, translations, aMapper);
 	}
 
 	var mapper = aTo || id;
@@ -264,7 +266,6 @@ function strtr(aString, aTranslations, aTo, aMapper) {
 	var keysRx = new RegExp('(' + keys.join('|') + ')', 'g');
 
 	return aString.replace(keysRx, function(_, aKey) {
-		// String(val).replace(/\$/g, '$$$$');
 		return mapper(aTranslations[aKey], aKey);
 	});
 }
@@ -273,9 +274,9 @@ function strtr(aString, aTranslations, aTo, aMapper) {
 
 
 return strtr;
-})(cm__util__escapeRx_js);
+})(__registry_JSp6['util/escapeRx.js']);
 
-var cm__DirectiveParsers_js = (function(strtr) {
+__registry_JSp6['DirectiveParsers.js'] = (function(strtr) {
 
 
 var DirectiveParsers = (function() {
@@ -405,53 +406,52 @@ var DirectiveParsers = (function() {
 
 
 return DirectiveParsers;
-})(cm__util__strtr_js);
+})(__registry_JSp6['util/strtr.js']);
 
-var cm__closureCompile_js = (function(strtr, extend, concatMap) {
+__registry_JSp6['closureCompile.js'] = (function(strtr, extend, concatMap) {
 
 
 
 
 var fs = require('fs');
 
+var PROLOGUE = 'var $registry_name = {};\n\n';
+
 var MODULE_TEMPLATE =
-	'var $module_name = (function($params) {\n' +
+	"$slot = (function($params) {\n" +
 		'$source\n' +
 		'return $exports;\n' +
 	'})($args);\n\n';
 
-var MAIN_MODULE_TEMAPLATE = strtr(MODULE_TEMPLATE, {
-	'$name': 'typeof($name) !== \'undefined\' ? $name : (void 0)'
-});
+var RESOURCE_TEMPLATE = "$slot = '$source';\n\n";
 
-var RESOURCE_TEMPLATE = 'var $module_name = \'$source\';\n\n';
-
-var INVOKE_TEMPLATE =
-	'if (typeof($main_module) === \'function\') {\n' +
+var EPILOGUE =
+	"if (typeof($main_module) === 'function') {\n" +
 	'	$main_module.call(this);\n' +
 	'} else if ($main_module) {\n' +
 	'	$main_module.main.call(this);\n' +
 	'}\n';
 
-function pathToName(aPath) {
-	var unprefixed = aPath
-		.replace(/\./g, '_')
-		.replace(/\//g, '__');
-
-	return 'cm__' + unprefixed;
+function pathToSlot(aRegistry, aPath) {
+	return strtr("registry['path']", {
+		registry: aRegistry,
+		path: aPath
+	});
 }
 
-function compile(aItem) {
-	var moduleName = pathToName(aItem.path);
+function compile(aRegistry, aItem) {
+	var moduleSlot = pathToSlot(aRegistry, aItem.path);
 
 	if (aItem.type === 'resource') {
+		var source = aItem.source
+			.replace(/\\/g, '\\\\')
+			.replace(/\'/g, '\\\'')
+			.replace(/\r/g, '\\r')
+			.replace(/\n/g, '\\n');
+
 		return strtr(RESOURCE_TEMPLATE, {
-			$module_name: moduleName,
-			$source: aItem.source
-				.replace(/\\/g, '\\\\')
-				.replace(/\'/g, '\\\'')
-				.replace(/\r/g, '\\r')
-				.replace(/\n/g, '\\n')
+			$slot: moduleSlot,
+			$source: source
 		});
 	}
 
@@ -463,12 +463,12 @@ function compile(aItem) {
 	.join(', ');
 
 	var args = concatMap(aItem.dependencies, function(aDependency) {
-		var identifier = pathToName(aDependency.path);
+		var slot = pathToSlot(aRegistry, aDependency.path);
 
 		return aDependency.ids === 'all'
-			? [ identifier ]
+			? [ slot ]
 			: aDependency.ids.map(function(aX) {
-				return identifier + '.' + aX;
+				return slot + '.' + aX;
 			});
 	})
 	.join(', ');
@@ -488,12 +488,34 @@ function compile(aItem) {
 	}
 
 	return strtr(MODULE_TEMPLATE, {
-		$module_name: moduleName,
+		$slot: moduleSlot,
 		$params: params,
 		$source: aItem.source,
 		$exports: exports,
 		$args: args
 	});
+}
+
+var hash = (function() {
+	var ALPHABET = 'abcdefghijklnmopqrstuvwxyz';
+	ALPHABET += ALPHABET.toUpperCase();
+	ALPHABET += '0123456789';
+
+	return function(aLength) {
+		var retval = '';
+
+		for (var i = aLength; i > 0; i--) {
+			var rnd = Math.floor(Math.random() * ALPHABET.length);
+
+			retval += ALPHABET[rnd];
+		}
+
+		return retval;
+	};
+})();
+
+function createRegistryName() {
+	return '__registry_' + hash(4);
 }
 
 function closureCompile(aDependencyManager, aPath) {
@@ -509,7 +531,11 @@ function closureCompile(aDependencyManager, aPath) {
 		return aItem === mainModule;
 	};
 
-	var retval = '';
+	var registry = createRegistryName();
+	var retval = strtr(PROLOGUE, {
+		$registry_name: registry
+	});
+
 	while (true) {
 		var keys = Object.keys(left);
 
@@ -522,7 +548,7 @@ function closureCompile(aDependencyManager, aPath) {
 
 			if (item.dependencies.every(isCompiled)) {
 				if (!isMain(item)) {
-					retval += compile(item);
+					retval += compile(registry, item);
 				}
 
 				compiled[aKey] = true;
@@ -531,8 +557,8 @@ function closureCompile(aDependencyManager, aPath) {
 		});
 	}
 
-	retval += strtr(INVOKE_TEMPLATE, {
-		$main_module: pathToName(mainModule.dependencies[0].path)
+	retval += strtr(EPILOGUE, {
+		$main_module: pathToSlot(registry, mainModule.dependencies[0].path)
 	});
 
 	fs.writeFileSync(aPath, retval);
@@ -544,9 +570,9 @@ function closureCompile(aDependencyManager, aPath) {
 
 
 return closureCompile;
-})(cm__util__strtr_js, cm__util__extend_js, cm__util__concatMap_js);
+})(__registry_JSp6['util/strtr.js'], __registry_JSp6['util/extend.js'], __registry_JSp6['util/concatMap.js']);
 
-var cm__DependencyParser_js = (function(extend, groupBy, concatMap, DependencyManager, DirectiveParsers) {
+__registry_JSp6['DependencyParser.js'] = (function(extend, groupBy, concatMap, DependencyManager, DirectiveParsers) {
 
 
 
@@ -800,9 +826,9 @@ module.exports.parse = parse;
 return {
 	parse: parse
 };
-})(cm__util__extend_js, cm__util__groupBy_js, cm__util__concatMap_js, cm__DependencyManager_js, cm__DirectiveParsers_js);
+})(__registry_JSp6['util/extend.js'], __registry_JSp6['util/groupBy.js'], __registry_JSp6['util/concatMap.js'], __registry_JSp6['DependencyManager.js'], __registry_JSp6['DirectiveParsers.js']);
 
-var cm__Diagnostics_js = (function(strtr, mapKeys) {
+__registry_JSp6['Diagnostics.js'] = (function(strtr, mapKeys) {
 
 
 
@@ -840,10 +866,9 @@ return {
 	Diagnostics: Diagnostics,
 	faultMessage: faultMessage
 };
-})(cm__util__strtr_js, cm__util__mapKeys_js);
+})(__registry_JSp6['util/strtr.js'], __registry_JSp6['util/mapKeys.js']);
 
-var cm__build_js = (function(OptionsParser, closureCompile, DependencyParser, faultMessage) {
-var fs = require('fs');
+__registry_JSp6['build.js'] = (function(OptionsParser, closureCompile, DependencyParser, faultMessage) {
 
 
 
@@ -912,17 +937,17 @@ function main() {
 		return;
 	}
 
-	var compiledSource = closureCompile(dependencyManager, args.fileOut);
+	closureCompile(dependencyManager, args.fileOut);
 }
 
 // del me
 main();
 
 return void(0);
-})(cm__OptionsParser_js, cm__closureCompile_js, cm__DependencyParser_js, cm__Diagnostics_js.faultMessage);
+})(__registry_JSp6['OptionsParser.js'], __registry_JSp6['closureCompile.js'], __registry_JSp6['DependencyParser.js'], __registry_JSp6['Diagnostics.js'].faultMessage);
 
-if (typeof(cm__build_js) === 'function') {
-	cm__build_js.call(this);
-} else if (cm__build_js) {
-	cm__build_js.main.call(this);
+if (typeof(__registry_JSp6['build.js']) === 'function') {
+	__registry_JSp6['build.js'].call(this);
+} else if (__registry_JSp6['build.js']) {
+	__registry_JSp6['build.js'].main.call(this);
 }
