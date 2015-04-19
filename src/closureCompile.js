@@ -1,5 +1,4 @@
 // import util/strtr
-// import util/extend
 // import util/concatMap
 // import util/escapeJsString
 
