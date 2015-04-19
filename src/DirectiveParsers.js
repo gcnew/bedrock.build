@@ -1,4 +1,4 @@
-var strtr = require('./util/strtr.js');
+// import util/strtr
 
 var DirectiveParsers = (function() {
 	function error(aMessage) {
@@ -122,5 +122,3 @@ var DirectiveParsers = (function() {
 		}
 	};
 })();
-
-module.exports = DirectiveParsers;

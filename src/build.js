@@ -1,8 +1,10 @@
-var OptionsParser = require('./OptionsParser.js');
-var nodeCompile = require('./nodeCompile.js');
-var closureCompile = require('./closureCompile.js');
-var DependencyParser = require('./DependencyParser.js');
-var faultMessage = require('./Diagnostics.js').faultMessage;
+// import OptionsParser
+// import nodeCompile
+// import closureCompile
+// import DependencyParser
+// import Diagnostics (faultMessage)
+
+// export ()
 
 var COMPILERS = {
 	node: nodeCompile,
@@ -86,5 +88,3 @@ function main() {
 }
 
 main();
-
-module.exports = void(0);

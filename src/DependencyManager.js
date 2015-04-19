@@ -1,4 +1,4 @@
-var extend = require('./util/extend.js');
+// import util/extend
 
 function DependencyManager() {
 	this.dependencies = {};
@@ -96,5 +96,3 @@ extend(DependencyManager.prototype, {
 		}
 	}
 });
-
-module.exports = DependencyManager;

@@ -87,5 +87,3 @@ var OptionsParser = (function() {
 		parse: parseArguments
 	};
 })();
-
-module.exports = OptionsParser;

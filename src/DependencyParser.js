@@ -1,8 +1,10 @@
-var extend = require('./util/extend.js');
-var groupBy = require('./util/groupBy.js');
-var concatMap = require('./util/concatMap.js');
-var DependencyManager = require('./DependencyManager.js');
-var DirectiveParsers = require('./DirectiveParsers.js');
+// import util/extend
+// import util/groupBy
+// import util/concatMap
+// import DependencyManager
+// import DirectiveParsers
+
+// export (parse)
 
 var fs = require('fs'); // node_import fs
 var Path = require('path');
@@ -244,7 +246,3 @@ function collectDependencies(aRoot, dependencyManager) {
 
 	return dependencyManager;
 }
-
-module.exports = {
-	parse: parse
-};

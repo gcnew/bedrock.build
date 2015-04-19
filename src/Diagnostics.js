@@ -1,5 +1,7 @@
-var strtr = require('./util/strtr.js');
-var mapKeys = require('./util/mapKeys.js');
+// import util/strtr
+// import util/mapKeys
+
+// export (Diagnostics, faultMessage)
 
 var PREFIXES = {
 	error: 'ERROR: '
@@ -26,8 +28,3 @@ function faultMessage(aFault) {
 
 	return prefix + message;
 }
-
-module.exports = {
-	Diagnostics: Diagnostics,
-	faultMessage: faultMessage
-};

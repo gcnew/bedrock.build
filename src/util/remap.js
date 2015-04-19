@@ -6,6 +6,3 @@ function remap(aObject, aMapper, aThis) {
 		return aAcc;
 	}, {});
 }
-
-// del me
-module.exports = remap;

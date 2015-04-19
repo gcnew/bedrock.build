@@ -9,5 +9,3 @@ function extend(aTartget /*, ..args */) {
 
 	return aTartget;
 }
-
-module.exports = extend;

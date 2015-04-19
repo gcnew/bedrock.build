@@ -8,5 +8,3 @@ function groupBy(aArray, aFunc, aThis) {
 		return aAcc;
 	}, {});
 }
-
-module.exports = groupBy;

@@ -1,4 +1,4 @@
-var escapeRx = require('./escapeRx.js');
+// import ./escapeRx
 
 function id(aX) {
 	return aX;
@@ -32,5 +32,3 @@ function strtr(aString, aTranslations, aTo, aMapper) {
 		return mapper(aTranslations[aKey], aKey);
 	});
 }
-
-module.exports = strtr;

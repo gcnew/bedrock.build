@@ -5,5 +5,3 @@ function escapeJsString(aString) {
 		.replace(/\r/g, '\\r')
 		.replace(/\n/g, '\\n');
 }
-
-module.exports = escapeJsString;

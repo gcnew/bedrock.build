@@ -4,5 +4,3 @@ function mapKeys(aObject, aMapper, aThis) {
 		return aAcc;
 	}, {});
 }
-
-module.exports = mapKeys;

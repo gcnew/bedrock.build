@@ -4,6 +4,3 @@ function mapValues(aObject, aMapper, aThis) {
 		return aAcc;
 	}, {});
 }
-
-// del me
-module.exports = mapValues;

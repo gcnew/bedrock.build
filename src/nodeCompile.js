@@ -1,6 +1,6 @@
-var strtr = require('./util/strtr.js');
-var concatMap = require('./util/concatMap.js');
-var escapeJsString = require('./util/escapeJsString.js');
+// import util/strtr
+// import util/concatMap
+// import util/escapeJsString
 
 var fs = require('fs');
 var Path = require('path');
@@ -107,5 +107,3 @@ function compile(aPath, aItem) {
 function nodeCompile(aDependencyManager, aPath) {
 	aDependencyManager.traverseDependencies(compile.bind(null, aPath));
 }
-
-module.exports = nodeCompile;

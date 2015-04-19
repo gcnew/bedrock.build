@@ -5,6 +5,3 @@ function partition(aArray, aPredicate, aThis) {
 		return aAcc;
 	}, [ [], [] ]);
 }
-
-// del me
-module.exports = partition;

@@ -1,7 +1,7 @@
-var strtr = require('./util/strtr.js');
-var extend = require('./util/extend.js');
-var concatMap = require('./util/concatMap.js');
-var escapeJsString = require('./util/escapeJsString.js');
+// import util/strtr
+// import util/extend
+// import util/concatMap
+// import util/escapeJsString
 
 var fs = require('fs');
 
@@ -122,5 +122,3 @@ function closureCompile(aDependencyManager, aPath) {
 
 	return true;
 }
-
-module.exports = closureCompile;
