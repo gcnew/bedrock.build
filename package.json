@@ -1,6 +1,6 @@
 {
 	"name": "bedrock-build",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"license": "MIT",
 	"description": "bedrock.build is a simple JavaScript builder that compiles JS files to different module systems",
 	"keywords": [ "import", "require", "amd", "build" ],
