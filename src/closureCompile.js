@@ -4,7 +4,9 @@
 
 var fs = require('fs');
 
-var PROLOGUE = 'var $registry_name = {};\n\n';
+var PROLOGUE =
+	'(function() {\n' +
+		'var $registry_name = {};\n\n';
 
 var MODULE_TEMPLATE =
 	"$slot = (function($params) {\n" +
@@ -15,13 +17,14 @@ var MODULE_TEMPLATE =
 var RESOURCE_TEMPLATE = "$slot = '$data';\n\n";
 
 var EPILOGUE =
-	"if (typeof($main_module) === 'function') {\n" +
-	'	return $main_module.call(this);\n' +
-	'} else if ($main_module) {\n' +
-	'	return $main_module.main.call(this);\n' +
-	'} else {\n' +
-	'	return $main_module;\n' +
-	'}\n';
+		"if (typeof($main_module) === 'function') {\n" +
+		'	return $main_module.call(this);\n' +
+		'} else if ($main_module) {\n' +
+		'	return $main_module.main.call(this);\n' +
+		'} else {\n' +
+		'	return $main_module;\n' +
+		'}\n' +
+	'}).call(this);';
 
 function pathToSlot(aRegistry, aPath) {
 	return strtr("registry['path']", {
