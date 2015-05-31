@@ -4,9 +4,9 @@ set -e
 
 rm -rf build/candidate build/built-with-candidate
 
-node lib/build.js src/build.js build/candidate --compiler=node
+node lib/build.js src/build.js build/candidate --compiler=node $@
 
-node build/candidate/build.js src/build.js build/built-with-candidate -c node
+node build/candidate/build.js src/build.js build/built-with-candidate -c node $@
 
 diff build/candidate build/built-with-candidate
 
