@@ -6,6 +6,9 @@
 
 // export ()
 
+var fs = require('fs');
+var path = require('path');
+
 var COMPILERS = {
 	node: nodeCompile,
 	closure: closureCompile
@@ -45,9 +48,22 @@ function parseArguments() {
 	}
 
 	options.compiler = options.compiler || 'closure';
-	if (!(options.compiler in COMPILERS)) {
-		console.log('Error: Invalid compiler: ' + options.compiler);
-		return;
+	if (options.compiler in COMPILERS) {
+		options.compiler = COMPILERS[options.compiler];
+	} else { 
+		if (!fs.existsSync(options.compiler)) {
+			console.log('Error: Invalid compiler: ' + options.compiler);
+			return;
+		}
+
+		var cp = path.relative(__dirname, options.compiler);
+		var compiler = require('./' + cp);
+		if (typeof(compiler) !== 'function') {
+			console.log('Error: Invalid compiler - function expected: ' + options.compiler);
+			return;
+		}
+
+		options.compiler = compiler;
 	}
 
 	return options;
@@ -84,7 +100,7 @@ function main() {
 		process.exit(1);
 	}
 
-	COMPILERS[args.compiler](dependencyManager, args.fileOut);
+	args.compiler(dependencyManager, args.fileOut);
 }
 
 main();
