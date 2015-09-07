@@ -22,6 +22,8 @@
 	"dependencies": {
 	},
 	"devDependencies": {
+		"chai": "*",
+		"mocha": "*"
 	},
 	"private": true
 }
